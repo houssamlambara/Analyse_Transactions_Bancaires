@@ -1,31 +1,28 @@
 package model;
 
-public class Compte {
+public abstract sealed class Compte permits CompteCourant, CompteEpargne {
 
-    private String id;
-    private String numero;
+    private final String id;
+    private final String numero;
     private Double solde;
-    private String idClient;
+    private final String idClient;
 
-    public Compte() {}
-
-
-    public Compte(String id, String numero, Double solde, String idClient){
+    public Compte(String id, String numero, double solde, String idClient) {
         this.id = id;
         this.numero = numero;
         this.solde = solde;
         this.idClient = idClient;
     }
 
-    public String getIdClient() {
-        return idClient;
+    public String getId() {
+        return id;
     }
 
-    public void setIdClient(String idClient) {
-        this.idClient = idClient;
+    public String getNumero() {
+        return numero;
     }
 
-    public double getSolde() {
+    public Double getSolde() {
         return solde;
     }
 
@@ -33,19 +30,7 @@ public class Compte {
         this.solde = solde;
     }
 
-    public String getNumero() {
-        return numero;
-    }
-
-    public void setNumero(String numero) {
-        this.numero = numero;
-    }
-
-    public String getId() {
-        return id;
-    }
-
-    public void setId(String id) {
-        this.id = id;
+    public String getIdClient() {
+        return idClient;
     }
 }

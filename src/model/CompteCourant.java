@@ -1,6 +1,6 @@
 package model;
 
-public class CompteCourant extends Compte {
+public final class CompteCourant extends Compte {
 
     private double decouvert;
 

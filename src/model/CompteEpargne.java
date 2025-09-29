@@ -1,6 +1,6 @@
 package model;
 
-public class CompteEpargne extends Compte{
+public final class CompteEpargne extends Compte{
     private Double tauxInteret;
 
     public CompteEpargne(String id, String numero, Double solde, String idClient, double tauxInteret) {
