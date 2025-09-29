@@ -15,4 +15,8 @@ public final class CompteEpargne extends Compte{
     public void setTauxInteret(double tauxInteret) {
         this.tauxInteret = tauxInteret;
     }
+
+    public void interet(){
+        setSolde(getSolde()+ getSolde()* tauxInteret / 100);
+    }
 }

@@ -16,4 +16,14 @@ public final class CompteCourant extends Compte {
     public void setDecouvert(double decouvert) {
         this.decouvert = decouvert;
     }
+
+    @Override
+    public boolean retirer(double montant){
+        if(montant > 0 && montant <= getSolde() + decouvert) {
+            setSolde(getSolde() - montant);
+            return true;
+        }
+        return false;
+    }
+
 }

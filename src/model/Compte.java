@@ -33,4 +33,17 @@ public abstract sealed class Compte permits CompteCourant, CompteEpargne {
     public String getIdClient() {
         return idClient;
     }
+
+    public void deposer(double montant){
+        if(montant >0) this.solde +=montant;
+    }
+
+    public boolean retirer(double montant){
+        if(montant >0 && montant <=solde){
+            solde -= montant;
+            return true;
+        }
+        return false;
+    }
+
 }
