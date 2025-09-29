@@ -25,7 +25,7 @@ public class ClientController {
             System.out.println("0. Retour");
             System.out.print("Votre choix : ");
             choix = scanner.nextInt();
-            scanner.nextLine(); // consommer le retour chariot
+            scanner.nextLine();
 
             switch (choix) {
                 case 1 -> ajouterClient();
@@ -72,8 +72,8 @@ public class ClientController {
             System.out.println("Entrer le nouvel email du client :");
             String email = scanner.nextLine();
 
-            Client client = new Client(id, nom, email); // créer l'objet client avec les nouvelles infos
-            clientService.modifierClient(client);       // appeler le service pour mettre à jour
+            Client client = new Client(id, nom, email);
+            clientService.modifierClient(client);
 
             System.out.println("Client mis à jour avec succès !");
         } catch (Exception e) {
@@ -129,7 +129,7 @@ public class ClientController {
 
     private void afficherTousLesClients() {
         try {
-            List<Client> clients = clientService.getAll();
+            List<Client> clients = clientService.findAll();
             if (clients.isEmpty()) {
                 System.out.println("Aucun client trouvé !");
             } else {

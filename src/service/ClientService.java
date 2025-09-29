@@ -31,10 +31,10 @@ public class ClientService {
     }
 
     public Client getClientByName(String nom) throws SQLException {
-        return clientDAO.findByName(nom); // 🔹 maintenant ça utilise bien findByName
+        return clientDAO.findByName(nom);
     }
 
-    public List<Client> getAll() throws SQLException {
+    public List<Client> findAll() throws SQLException {
         return clientDAO.findAll();
     }
 }
