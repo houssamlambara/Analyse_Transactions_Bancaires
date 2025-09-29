@@ -2,6 +2,7 @@ package service;
 
 import DAO.CompteDAO;
 import DAO.CompteDAOImpl;
+import model.Client;
 import model.Compte;
 import config.Connexion;
 
@@ -25,11 +26,11 @@ public class CompteService {
         compteDAO.delete(id);
     }
 
-    public List<Compte> getComptesParClient(String idClient) throws SQLException {
+    public List<Compte> getByClient(String idClient) throws SQLException {
         return compteDAO.findByClient(idClient);
     }
 
-    public Compte getCompteParNumero(String numero) throws SQLException {
+    public Compte getByNumero(String numero) throws SQLException {
         return compteDAO.findByNumero(numero);
     }
 }
