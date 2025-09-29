@@ -1,14 +1,10 @@
 import controller.MainController;
 import ui.MenuUi;
 
-import java.util.Scanner;
-
 public class Main {
-
     public static void main(String[] args) {
         MenuUi menuUi = new MenuUi();
         MainController controller = new MainController(menuUi);
-        Scanner scanner = new Scanner(System.in);
 
         int choix;
         do {
@@ -21,7 +17,5 @@ public class Main {
                 default -> System.out.println("Choix invalide !");
             }
         } while (choix != 0);
-
-        scanner.close();
     }
 }

@@ -3,10 +3,11 @@ package ui;
 import java.util.Scanner;
 
 public class MenuUi {
-    Scanner scanner = new Scanner(System.in);
+
+    private final Scanner scanner = new Scanner(System.in);
 
     public int menuPrincipal() {
-        System.out.println("=== Menu Principal ===");
+        System.out.println("==== Al Baraka Banque ====");
         System.out.println("1. Gestion des clients");
         System.out.println("2. Gestion des comptes");
         System.out.println("3. Gestion des transactions");
@@ -23,7 +24,6 @@ public class MenuUi {
         System.out.println("4. Rechercher un client par ID");
         System.out.println("5. Rechercher un client par nom");
         System.out.println("6. Afficher tous les clients");
-        System.out.println("7. Informations pour rapports");
         System.out.println("0. Retour");
         System.out.print("Votre choix : ");
         return scanner.nextInt();
