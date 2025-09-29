@@ -1,6 +1,8 @@
 package controller;
 
 import model.Client;
+
+import java.util.List;
 import java.util.Scanner;
 import service.ClientService;
 import service.CompteService;
@@ -28,7 +30,9 @@ public class MainController {
                 case 1 -> ajouterClient();
                 case 2 -> modifierClient();
                 case 3 -> supprimerClient();
-                case 4 -> System.out.println("Afficher tout les clients"); // appeler clientService.getAll(...)
+                case 4 -> rechercherClientParId();
+                case 5 -> rechercherClientParNom();
+                case 6 -> afficherTousLesClients();
                 case 0 -> System.out.println("Retour au menu principal...");
                 default -> System.out.println("Choix invalide !");
             }
@@ -106,7 +110,6 @@ public class MainController {
 
     private void supprimerClient() {
         Scanner scanner = new Scanner(System.in);
-        System.out.println("=== Supprimer un client ===");
         System.out.print("Entrez l'ID du client à supprimer : ");
         String id = scanner.nextLine().trim();
 
@@ -114,6 +117,58 @@ public class MainController {
             clientService.supprimerClient(id);
         } catch (SQLException e) {
             System.out.println("Erreur lors de la suppression : " + e.getMessage());
+        }
+    }
+
+    private void rechercherClientParId() {
+        Scanner scanner = new Scanner(System.in);
+        System.out.print("Entrez l'ID du client : ");
+        String id = scanner.nextLine().trim();
+        try {
+            Client client = clientService.getClientById(id);
+            if (client != null) {
+                System.out.println("ID : " + client.id() + " | Nom : " + client.nom() + " | Email : " + client.email());
+            } else {
+                System.out.println("Client non trouvé !");
+            }
+        } catch (SQLException e) {
+            System.out.println("Erreur : " + e.getMessage());
+        }
+    }
+
+    private void rechercherClientParNom() {
+        Scanner scanner = new Scanner(System.in);
+        System.out.print("Entrez le nom du client : ");
+        String nom = scanner.nextLine().trim();
+
+        try {
+            Client client = clientService.getClientByName(nom);
+            if (client != null) {
+                System.out.println("Client trouvé :");
+                System.out.println("ID : " + client.id() + " | Nom : " + client.nom() + " | Email : " + client.email());
+            } else {
+                System.out.println("Client non trouvé !");
+            }
+        } catch (SQLException e) {
+            System.out.println("Erreur lors de la recherche : " + e.getMessage());
+        }
+    }
+
+    private void afficherTousLesClients() {
+        try {
+            List<Client> clients = clientService.getAll();
+            if (clients.isEmpty()) {
+                System.out.println("Aucun client trouvé !");
+            } else {
+                System.out.println("=== Liste des clients ===");
+                for (Client client : clients) {
+                    System.out.println("ID : " + client.id()
+                            + " | Nom : " + client.nom()
+                            + " | Email : " + client.email());
+                }
+            }
+        } catch (SQLException e) {
+            System.out.println("Erreur lors de l'affichage des clients : " + e.getMessage());
         }
     }
 }

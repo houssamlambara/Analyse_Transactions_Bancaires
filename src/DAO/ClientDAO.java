@@ -9,6 +9,8 @@ public interface ClientDAO {
     void create(Client client) throws SQLException;
     void update(Client client) throws SQLException;
     void delete(String id) throws SQLException;
-    Client findById(String id) throws SQLException;
     List<Client> findAll() throws SQLException;
+    Client findById(String id) throws SQLException;
+    Client findByName(String nom) throws SQLException;
+
 }

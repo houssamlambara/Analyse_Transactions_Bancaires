@@ -30,8 +30,8 @@ public class ClientService {
         return clientDAO.findById(id);
     }
 
-    public Client getClientByName(String nom) throws SQLException{
-        return clientDAO.findById(nom);
+    public Client getClientByName(String nom) throws SQLException {
+        return clientDAO.findByName(nom); // 🔹 maintenant ça utilise bien findByName
     }
 
     public List<Client> getAll() throws SQLException {

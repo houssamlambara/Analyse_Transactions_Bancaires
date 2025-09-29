@@ -4,6 +4,7 @@ import config.Connexion;
 import model.Client;
 
 import java.sql.*;
+import java.util.ArrayList;
 import java.util.List;
 
 public class ClientDAOImpl implements ClientDAO {
@@ -62,11 +63,54 @@ public class ClientDAOImpl implements ClientDAO {
 
     @Override
     public Client findById(String id) throws SQLException {
+        String sql = "SELECT * FROM client WHERE id = ?";
+        try (PreparedStatement stmt = connection.prepareStatement(sql)) {
+            stmt.setString(1, id);
+            try (ResultSet resultat = stmt.executeQuery()) {
+                if (resultat.next()) {
+                    return new Client(
+                            resultat.getString("id"),
+                            resultat.getString("nom"),
+                            resultat.getString("email")
+                    );
+                }
+            }
+        }
         return null;
     }
 
     @Override
     public List<Client> findAll() throws SQLException {
-        return List.of();
+        List<Client> clients = new ArrayList<>();
+        String sql = "SELECT * FROM client";
+        try (PreparedStatement stmt = connection.prepareStatement(sql);
+             ResultSet resultat = stmt.executeQuery()) {
+            while (resultat.next()) {
+                clients.add(new Client(
+                        resultat.getString("id"),
+                        resultat.getString("nom"),
+                        resultat.getString("email")
+                ));
+            }
+        }
+        return clients;
+    }
+
+    @Override
+    public Client findByName(String nom) throws SQLException {
+        String sql = "SELECT * FROM client WHERE UPPER(nom) = UPPER(?)";
+        try (PreparedStatement stmt = connection.prepareStatement(sql)) {
+            stmt.setString(1, nom);
+            try (ResultSet resultat = stmt.executeQuery()) {
+                if (resultat.next()) {
+                    return new Client(
+                            resultat.getString("id"),
+                            resultat.getString("nom"),
+                            resultat.getString("email")
+                    );
+                }
+            }
+        }
+        return null;
     }
 }
