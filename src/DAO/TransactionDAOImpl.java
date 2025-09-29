@@ -1,11 +1,20 @@
 package DAO;
 
+import config.Connexion;
+import model.Compte;
 import model.Transaction;
 
-import java.sql.SQLException;
+import java.sql.*;
 import java.util.List;
 
-public class TranscationDAOImpl implements TransactionDAO{
+public class TransactionDAOImpl implements TransactionDAO{
+
+    private Connection connection;
+
+    public TransactionDAOImpl() {
+        this.connection = Connexion.getInstance().getConnection();
+    }
+
     @Override
     public void create(Transaction transaction) throws SQLException {
 

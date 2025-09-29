@@ -1,11 +1,20 @@
 package DAO;
 
+import config.Connexion;
 import model.Client;
 
-import java.sql.SQLException;
+import java.sql.*;
 import java.util.List;
 
 public class ClientDAOImpl implements ClientDAO {
+
+    private Connection connection;
+
+
+    public ClientDAOImpl() {
+        this.connection = Connexion.getInstance().getConnection();
+    }
+
     @Override
     public void create(Client client) throws SQLException {
 

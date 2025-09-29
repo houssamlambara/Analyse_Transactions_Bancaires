@@ -1,11 +1,20 @@
 package DAO;
 
+import config.Connexion;
 import model.Compte;
 
-import java.sql.SQLException;
+import java.sql.*;
 import java.util.List;
 
 public class CompteDAOImpl implements CompteDAO{
+
+    private Connection connection;
+
+
+    public CompteDAOImpl() {
+        this.connection = Connexion.getInstance().getConnection();
+    }
+
     @Override
     public void create(Compte compte) throws SQLException {
 
