@@ -1,142 +1,61 @@
 package controller;
 
-import java.util.Scanner;
+import service.ClientService;
+import service.CompteService;
+import service.TransactionService;
+import ui.MenuUi;
 
 public class MainController {
 
-    private Scanner scanner = new Scanner(System.in);
+    private final MenuUi menu;
+    private final ClientService clientService = new ClientService();
+    private final CompteService compteService = new CompteService();
+    private final TransactionService transactionService = new TransactionService();
 
-    public MainController() {
+    public MainController(MenuUi menu) {
+        this.menu = menu;
     }
 
-    public void start() {
-        while (true) {
-            System.out.println("\n=== Menu Principal Gestion Bancaire ===");
-            System.out.println("1. Gestion des clients");
-            System.out.println("2. Gestion des comptes");
-            System.out.println("3. Gestion des transactions");
-            System.out.println("4. Rapports");
-            System.out.println("0. Quitter");
-            System.out.print("Votre choix : ");
-
-            int choix = scanner.nextInt();
-            scanner.nextLine();
-
+    public void menuClients() {
+        int choix;
+        do {
+            choix = menu.menuClients();
             switch (choix) {
-                case 1:
-                    menuClients();
-                    break;
-                case 2:
-                    menuComptes();
-                    break;
-                case 3:
-                    menuTransactions();
-                    break;
-                case 4:
-                    menuRapports();
-                    break;
-                case 0:
-                    System.out.println("Merci d'avoir utilisé l'application !");
-                    return; // quitte la méthode start()
-                default:
-                    System.out.println("Choix invalide !");
+                case 1 -> System.out.println("Ajouter client");   // appeler clientService.ajouterClient(...)
+                case 2 -> System.out.println("Modifier client");  // appeler clientService.modifierClient(...)
+                case 3 -> System.out.println("Supprimer client"); // appeler clientService.supprimerClient(...)
+                case 4 -> System.out.println("Afficher tout les clients"); // appeler clientService.getAll(...)
+                case 0 -> System.out.println("Retour au menu principal...");
+                default -> System.out.println("Choix invalide !");
             }
-        }
+        } while (choix != 0);
     }
 
-    private void menuClients() {
-        System.out.println("\n--- Menu Gestion des Clients ---");
-        System.out.println("1. Créer un client");
-        System.out.println("2. Lister les clients");
-        System.out.println("0. Retour");
-        System.out.print("Votre choix : ");
-        int choix = scanner.nextInt();
-        scanner.nextLine();
-        switch (choix) {
-            case 1:
-                System.out.println("Création client...");
-                break;
-            case 2:
-                System.out.println("Liste des clients...");
-                break;
-            case 0:
-                System.out.println("Retour au menu principal...");
-                break;
-            default:
-                System.out.println("Choix invalide !");
-        }
+    public void menuComptes() {
+        int choix;
+        do {
+            choix = menu.menuComptes();
+            switch (choix) {
+                case 1 -> System.out.println("Créer compte Courant");
+                case 2 -> System.out.println("Créer compte Epargne");
+                case 3 -> System.out.println("Afficher tout les Compte");
+                case 0 -> System.out.println("Retour au menu principal...");
+                default -> System.out.println("Choix invalide !");
+            }
+        } while (choix != 0);
     }
 
-    private void menuComptes() {
-        System.out.println("\n--- Menu Gestion des Comptes ---");
-        System.out.println("1. Créer un compte");
-        System.out.println("2. Lister les comptes");
-        System.out.println("0. Retour");
-        System.out.print("Votre choix : ");
-        int choix = scanner.nextInt();
-        scanner.nextLine();
-        switch (choix) {
-            case 1:
-                System.out.println("Création compte...");
-                break;
-            case 2:
-                System.out.println("Liste des comptes...");
-                break;
-            case 0:
-                System.out.println("Retour au menu principal...");
-                break;
-            default:
-                System.out.println("Choix invalide !");
-        }
-    }
-
-    private void menuTransactions() {
-        System.out.println("\n--- Menu Gestion des Transactions ---");
-        System.out.println("1. Effectuer un versement");
-        System.out.println("2. Effectuer un retrait");
-        System.out.println("3. Effectuer un virement");
-        System.out.println("0. Retour");
-        System.out.print("Votre choix : ");
-        int choix = scanner.nextInt();
-        scanner.nextLine();
-        switch (choix) {
-            case 1:
-                System.out.println("Versement...");
-                break;
-            case 2:
-                System.out.println("Retrait...");
-                break;
-            case 3:
-                System.out.println("Virement...");
-                break;
-            case 0:
-                System.out.println("Retour au menu principal...");
-                break;
-            default:
-                System.out.println("Choix invalide !");
-        }
-    }
-
-    private void menuRapports() {
-        System.out.println("\n--- Menu Rapports ---");
-        System.out.println("1. Rapport des transactions d’un compte");
-        System.out.println("2. Rapport global des clients et comptes");
-        System.out.println("0. Retour");
-        System.out.print("Votre choix : ");
-        int choix = scanner.nextInt();
-        scanner.nextLine();
-        switch (choix) {
-            case 1:
-                System.out.println("Rapport compte...");
-                break;
-            case 2:
-                System.out.println("Rapport global...");
-                break;
-            case 0:
-                System.out.println("Retour au menu principal...");
-                break;
-            default:
-                System.out.println("Choix invalide !");
-        }
+    public void menuTransactions() {
+        int choix;
+        do {
+            choix = menu.menuTransactions();
+            switch (choix) {
+                case 1 -> System.out.println("Ajouter transaction");
+                case 2 -> System.out.println("Afficher transactions d’un compte");
+                case 3 -> System.out.println("Afficher transactions d’un client");
+                case 0 -> System.out.println("Retour au menu principal...");
+                default -> System.out.println("Choix invalide !");
+            }
+        } while (choix != 0);
     }
 }
