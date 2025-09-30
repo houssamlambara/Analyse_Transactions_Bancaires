@@ -10,5 +10,6 @@ public interface CompteDAO {
     void update(Compte compte) throws SQLException;
     void delete(String id) throws SQLException;
     List<Compte> findByClient(String idClient) throws SQLException;
+    Compte findById(String id) throws SQLException;
     Compte findByNumero(String numero) throws SQLException;
 }

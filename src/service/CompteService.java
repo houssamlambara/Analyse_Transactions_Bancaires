@@ -33,4 +33,9 @@ public class CompteService {
     public Compte getByNumero(String numero) throws SQLException {
         return compteDAO.findByNumero(numero);
     }
+
+    public Compte getById(String id) throws SQLException {
+        return compteDAO.findById(id);
+    }
+
 }

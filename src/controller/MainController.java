@@ -6,6 +6,8 @@ public class MainController {
 
     private final MenuUi menu;
     private final ClientController clientController = new ClientController();
+    private final CompteController compteController = new CompteController();
+
 
     public MainController(MenuUi menu) {
         this.menu = menu;
@@ -17,7 +19,7 @@ public class MainController {
             choix = menu.menuPrincipal();
             switch (choix) {
                 case 1 -> clientController.menuClients(); // délégation au ClientController
-                case 2 -> menuComptes();
+                case 2 -> compteController.menuComptes();
                 case 3 -> menuTransactions();
                 case 0 -> System.out.println("Au revoir !");
                 default -> System.out.println("Choix invalide !");
