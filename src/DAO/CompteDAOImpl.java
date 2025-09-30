@@ -80,11 +80,31 @@ public class CompteDAOImpl implements CompteDAO{
 
     @Override
     public List<Compte> findByClient(String idClient) throws SQLException {
-        return List.of();
+            String sql = "SELECT * FROM compte where idclient =?";
+            List<Compte> comptes = new ArrayList<>();
+
+            try (PreparedStatement stmt = connection.prepareStatement(sql)){
+                stmt.setString(1, idClient);
+                ResultSet resultat = stmt.executeQuery();
+
+                while (resultat.next()) {
+                    comptes.add(mapToCompte(resultat));
+                }
+            }
+        return comptes;
     }
 
     @Override
     public Compte findByNumero(String numero) throws SQLException {
+        String sql = "SELECT * FROM compte WHERE numero = ?";
+        try (PreparedStatement stmt = connection.prepareStatement(sql)){
+            stmt.setString(1, numero);
+            ResultSet resultat = stmt.executeQuery();
+
+            if (resultat.next()){
+                return mapToCompte(resultat);
+            }
+        }
         return null;
     }
 
@@ -114,4 +134,26 @@ public class CompteDAOImpl implements CompteDAO{
             return null;
         }
     }
+
+    private Compte mapToCompte(ResultSet rs) throws SQLException {
+        String id = rs.getString("id");
+        String numero = rs.getString("numero");
+        double solde = rs.getDouble("solde");
+        String idClient = rs.getString("idClient");
+        String type = rs.getString("typeCompte");
+
+        if ("courant".equals(type)) {
+            double decouvert = rs.getDouble("decouvert");
+            CompteCourant c = new CompteCourant(id, numero, solde, idClient);
+            c.setDecouvert(decouvert);
+            return c;
+        } else if ("epargne".equals(type)) {
+            double taux = rs.getDouble("tauxInteret");
+            return new CompteEpargne(id, numero, solde, idClient, taux);
+        }
+
+        return null; // au cas où aucun type ne correspond
+    }
+
+
 }

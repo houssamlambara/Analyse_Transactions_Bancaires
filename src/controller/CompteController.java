@@ -8,6 +8,7 @@ import service.CompteService;
 
 import javax.sound.midi.Soundbank;
 import java.sql.SQLException;
+import java.util.List;
 import java.util.Scanner;
 import java.util.UUID;
 
@@ -37,8 +38,8 @@ public class CompteController {
                 case 2 -> ajouterCompteEpargne();
                 case 3 -> modifierCompte();
                 case 4 -> supprimerCompte();
-//                case 5 -> rechercherParClient();
-//                case 6 -> rechercherParNumero();
+                case 5 -> getByClient();
+                case 6 -> getByNumero();
                 case 0 -> System.out.println("Retour...");
                 default -> System.out.println("Choix invalide !");
             }
@@ -169,7 +170,43 @@ public class CompteController {
         }
     }
 
-    public void getByClient(String idClient) { }
-    public void getByNumero (String numero) { }
+    public void getByClient() {
+        System.out.print("Entrez l'ID du client : ");
+        String idClient = scanner.nextLine();
+
+        try {
+            List<Compte> comptes = compteService.getByClient(idClient);
+            if (comptes.isEmpty()) {
+                System.out.println("Aucun compte trouvé pour ce client.");
+            } else {
+                comptes.forEach(c ->
+                        System.out.println("ID: " + c.getId() +
+                                ", Numéro: " + c.getNumero() +
+                                ", Solde: " + c.getSolde() +
+                                ", Client: " + c.getIdClient()));
+            }
+        } catch (SQLException e) {
+            System.out.println("Erreur : " + e.getMessage());
+        }
+    }
+
+    public void getByNumero() {
+        System.out.print("Entrez le numéro du compte : ");
+        String numero = scanner.nextLine();
+
+        try {
+            Compte compte = compteService.getByNumero(numero);
+            if (compte == null){
+                System.out.println("Aucun compte trouvé avec ce numéro.");
+            } else {
+                System.out.println("ID: " + compte.getId() +
+                        ", Numéro: " + compte.getNumero() +
+                        ", Solde: " + compte.getSolde() +
+                        ", Client: " + compte.getIdClient());
+            }
+        } catch (SQLException e){
+            System.out.println("Erreur : " + e.getMessage());
+        }
+    }
 
 }
