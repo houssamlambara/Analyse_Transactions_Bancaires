@@ -1,5 +1,7 @@
 package model;
 
+import java.util.UUID;
+
 public abstract sealed class Compte permits CompteCourant, CompteEpargne {
 
     private final String id;
@@ -8,8 +10,8 @@ public abstract sealed class Compte permits CompteCourant, CompteEpargne {
     private final String idClient;
 
     public Compte(String id, String numero, double solde, String idClient) {
-        this.id = id;
-        this.numero = numero;
+        this.id = UUID.randomUUID().toString();
+        this.numero = "CPT-" + (int)(Math.random()*10000);
         this.solde = solde;
         this.idClient = idClient;
     }

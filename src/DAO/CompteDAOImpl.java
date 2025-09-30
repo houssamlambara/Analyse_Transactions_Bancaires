@@ -27,14 +27,15 @@ public class CompteDAOImpl implements CompteDAO{
             stmt.setString(2, compte.getNumero());
             stmt.setDouble(3, compte.getSolde());
             stmt.setString(4, compte.getIdClient());
-        if (compte instanceof CompteCourant courant){
-            stmt.setString(5, "courant");
-            stmt.setDouble(6, courant.getDecouvert());
-            stmt.setNull(7, Types.DOUBLE);
+
+            if (compte instanceof CompteCourant courant){
+                stmt.setString(5, "courant");
+                stmt.setDouble(6, courant.getDecouvert());
+                stmt.setNull(7, Types.DOUBLE);
         } else if (compte instanceof CompteEpargne epargne) {
-            stmt.setString(5,"epargne");
-            stmt.setNull(6, Types.DOUBLE);
-            stmt.setDouble(7, epargne.getTauxInteret());
+                stmt.setString(5,"epargne");
+                stmt.setNull(6, Types.DOUBLE);
+                stmt.setDouble(7, epargne.getTauxInteret());
         }
             stmt.executeUpdate();
         }
@@ -43,18 +44,16 @@ public class CompteDAOImpl implements CompteDAO{
     @Override
     public void update(Compte compte) throws SQLException {
         if (compte instanceof CompteCourant courant) {
-            String sql = "UPDATE compte SET numero = ?, solde = ?, decouvert = ? WHERE id = ?";
+            String sql = "UPDATE compte SET solde = ?, decouvert = ? WHERE id = ?";
             try (PreparedStatement stmt = connection.prepareStatement(sql)) {
-                stmt.setString(1, compte.getNumero());
                 stmt.setDouble(2, compte.getSolde());
                 stmt.setDouble(3, courant.getDecouvert());
                 stmt.setString(4, compte.getId());
                 stmt.executeUpdate();
             }
         } else if (compte instanceof CompteEpargne epargne) {
-            String sql = "UPDATE compte SET numero = ?, solde = ?, tauxInteret = ? WHERE id = ?";
+            String sql = "UPDATE compte SET solde = ?, tauxInteret = ? WHERE id = ?";
             try (PreparedStatement stmt = connection.prepareStatement(sql)) {
-                stmt.setString(1, compte.getNumero());
                 stmt.setDouble(2, compte.getSolde());
                 stmt.setDouble(3, epargne.getTauxInteret());
                 stmt.setString(4, compte.getId());

@@ -46,10 +46,8 @@ public class CompteController {
     }
 
     private void ajouterCompteCourant() {
-        System.out.print("ID : ");
-        String id = scanner.nextLine();
-        System.out.print("Numéro : ");
-        String numero = scanner.nextLine();
+        String id = UUID.randomUUID().toString();
+        String numero = "CPT-" + (int)(Math.random() * 10000);
         System.out.print("Solde : ");
         double solde = scanner.nextDouble();
         System.out.print("Découvert : ");
@@ -70,10 +68,8 @@ public class CompteController {
     }
 
     private void ajouterCompteEpargne(){
-        System.out.println("ID :");
-        String id = scanner.nextLine();
-        System.out.println("Numero :");
-        String numero = scanner.nextLine();
+        String id = UUID.randomUUID().toString();
+        String numero = "CPT-" + (int)(Math.random() * 10000);
         System.out.println("Solde :");
         double solde = scanner.nextDouble();
         System.out.println("Taux d'interet :");
