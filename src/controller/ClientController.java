@@ -6,6 +6,7 @@ import service.ClientService;
 import java.sql.SQLException;
 import java.util.List;
 import java.util.Scanner;
+import java.util.UUID;
 
 public class ClientController {
 
@@ -41,13 +42,12 @@ public class ClientController {
     }
 
     public void ajouterClient() {
-        Scanner scanner = new Scanner(System.in);
-        System.out.print("ID : ");
-        String id = scanner.nextLine();
         System.out.print("Nom : ");
         String nom = scanner.nextLine();
         System.out.print("Email : ");
         String email = scanner.nextLine();
+
+        String id = UUID.randomUUID().toString();
 
         Client client = new Client(id, nom, email);
 

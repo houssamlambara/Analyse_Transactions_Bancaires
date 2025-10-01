@@ -1,9 +1,11 @@
 package controller;
 
 import DAO.CompteDAO;
+import model.Client;
 import model.Compte;
 import model.CompteCourant;
 import model.CompteEpargne;
+import service.ClientService;
 import service.CompteService;
 
 import javax.sound.midi.Soundbank;
@@ -54,19 +56,37 @@ public class CompteController {
         System.out.print("Découvert : ");
         double decouvert = scanner.nextDouble();
         scanner.nextLine();
-        System.out.print("ID Client : ");
-        String idClient = scanner.nextLine();
-
-        CompteCourant compte = new CompteCourant(id, numero, solde, idClient);
-        compte.setDecouvert(decouvert);
 
         try {
+            List<Client> clients = new ClientService().findAll();
+            if (clients.isEmpty()) {
+                System.out.println("Aucun client disponible !");
+                return;
+            }
+            System.out.println("=== Liste des clients ===");
+            for (Client client : clients) {
+                System.out.println("ID : " + client.id() + " | Nom : " + client.nom());
+            }
+
+            System.out.print("Entrez l'ID du client à associer au compte : ");
+            String idClient = scanner.nextLine().trim();
+
+            boolean clientExiste = clients.stream().anyMatch(client -> client.id().equals(idClient));
+            if (!clientExiste) {
+                System.out.println("ID client invalide !");
+                return;
+            }
+
+            CompteCourant compte = new CompteCourant(id, numero, solde, idClient);
+            compte.setDecouvert(decouvert);
+
             compteService.ajouterCompte(compte);
             System.out.println("Compte courant ajouté !");
         } catch (SQLException e) {
             System.out.println("Erreur : " + e.getMessage());
         }
     }
+
 
     private void ajouterCompteEpargne(){
         String id = UUID.randomUUID().toString();
@@ -76,13 +96,30 @@ public class CompteController {
         System.out.println("Taux d'interet :");
         double taux = scanner.nextDouble();
         scanner.nextLine();
-        System.out.println("ID Client :");
-        String idClient = scanner.nextLine();
-
-        CompteEpargne compte = new CompteEpargne(id, numero, solde, idClient, taux);
 
         try {
+            List<Client> clients = new ClientService().findAll();
+            if (clients.isEmpty()) {
+                System.out.println("Aucun client disponible !");
+                return;
+            }
+
+            System.out.println("=== Liste des clients ===");
+            for (Client client : clients) {
+                System.out.println("ID : " + client.id() + " | Nom : " + client.nom());
+            }
+
+            System.out.print("Entrez l'ID du client à associer au compte : ");
+            String idClient = scanner.nextLine().trim();
+
+            boolean clientExiste = clients.stream().anyMatch(client -> client.id().equals(idClient));
+            if (!clientExiste) {
+                System.out.println("ID client invalide !");
+                return;
+            }
+            CompteEpargne compte = new CompteEpargne(id, numero, solde, idClient, taux);
             compteService.ajouterCompte(compte);
+
             System.out.println("Compte epargne ajouter !");
         }catch (SQLException e){
             System.out.println("Erreur :" + e.getMessage());

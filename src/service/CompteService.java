@@ -26,6 +26,10 @@ public class CompteService {
         compteDAO.delete(id);
     }
 
+    public List<Compte> getAll() throws SQLException{
+        return compteDAO.findAll();
+    }
+
     public List<Compte> getByClient(String idClient) throws SQLException {
         return compteDAO.findByClient(idClient);
     }

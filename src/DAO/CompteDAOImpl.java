@@ -46,17 +46,17 @@ public class CompteDAOImpl implements CompteDAO{
         if (compte instanceof CompteCourant courant) {
             String sql = "UPDATE compte SET solde = ?, decouvert = ? WHERE id = ?";
             try (PreparedStatement stmt = connection.prepareStatement(sql)) {
-                stmt.setDouble(2, compte.getSolde());
-                stmt.setDouble(3, courant.getDecouvert());
-                stmt.setString(4, compte.getId());
+                stmt.setDouble(1, compte.getSolde());
+                stmt.setDouble(2, courant.getDecouvert());
+                stmt.setString(3, compte.getId());
                 stmt.executeUpdate();
             }
         } else if (compte instanceof CompteEpargne epargne) {
             String sql = "UPDATE compte SET solde = ?, tauxInteret = ? WHERE id = ?";
             try (PreparedStatement stmt = connection.prepareStatement(sql)) {
-                stmt.setDouble(2, compte.getSolde());
-                stmt.setDouble(3, epargne.getTauxInteret());
-                stmt.setString(4, compte.getId());
+                stmt.setDouble(1, compte.getSolde());
+                stmt.setDouble(2, epargne.getTauxInteret());
+                stmt.setString(3, compte.getId());
                 stmt.executeUpdate();
             }
         }
@@ -76,6 +76,18 @@ public class CompteDAOImpl implements CompteDAO{
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
+    }
+
+    public List<Compte> findAll() throws SQLException{
+        String sql = "SELECT * FROM compte";
+        List<Compte> comptes = new ArrayList<>();
+        try (Statement stmt = connection.createStatement()){
+            ResultSet resultat = stmt.executeQuery(sql);
+            while (resultat.next()){
+                comptes.add(mapToCompte(resultat));
+            }
+        }
+        return comptes;
     }
 
     @Override
@@ -135,25 +147,23 @@ public class CompteDAOImpl implements CompteDAO{
         }
     }
 
-    private Compte mapToCompte(ResultSet rs) throws SQLException {
-        String id = rs.getString("id");
-        String numero = rs.getString("numero");
-        double solde = rs.getDouble("solde");
-        String idClient = rs.getString("idClient");
-        String type = rs.getString("typeCompte");
+    private Compte mapToCompte(ResultSet resultat) throws SQLException {
+        String id = resultat.getString("id");
+        String numero = resultat.getString("numero");
+        double solde = resultat.getDouble("solde");
+        String idClient = resultat.getString("idClient");
+        String type = resultat.getString("typeCompte");
 
         if ("courant".equals(type)) {
-            double decouvert = rs.getDouble("decouvert");
+            double decouvert = resultat.getDouble("decouvert");
             CompteCourant c = new CompteCourant(id, numero, solde, idClient);
             c.setDecouvert(decouvert);
             return c;
         } else if ("epargne".equals(type)) {
-            double taux = rs.getDouble("tauxInteret");
+            double taux = resultat.getDouble("tauxInteret");
             return new CompteEpargne(id, numero, solde, idClient, taux);
         }
-
-        return null; // au cas où aucun type ne correspond
+        return null;
     }
-
 
 }
