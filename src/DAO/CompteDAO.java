@@ -12,4 +12,8 @@ public interface CompteDAO {
     List<Compte> findByClient(String idClient) throws SQLException;
     Compte findById(String id) throws SQLException;
     Compte findByNumero(String numero) throws SQLException;
+    Compte findByMax() throws SQLException;
+    Compte findByMin() throws SQLException;
+
+
 }

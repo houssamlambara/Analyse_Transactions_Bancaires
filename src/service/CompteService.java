@@ -42,4 +42,12 @@ public class CompteService {
         return compteDAO.findById(id);
     }
 
+    public Compte getByMax() throws SQLException{
+        return compteDAO.findByMax();
+    }
+
+    public Compte getByMin() throws SQLException{
+        return compteDAO.findByMin();
+    }
+
 }

@@ -30,10 +30,12 @@ public class CompteController {
             System.out.println("4. Supprimer un compte");
             System.out.println("5. Rechercher par client");
             System.out.println("6. Rechercher par numéro");
+            System.out.println("7. Afficher le compte avec solde Maximum");
+            System.out.println("7. Afficher le compte avec solde Minimum");
             System.out.println("0. Retour");
             System.out.print("Votre choix : ");
             choix = scanner.nextInt();
-            scanner.nextLine(); // consommer le \n
+            scanner.nextLine();
 
             switch (choix) {
                 case 1 -> ajouterCompteCourant();
@@ -42,6 +44,8 @@ public class CompteController {
                 case 4 -> supprimerCompte();
                 case 5 -> getByClient();
                 case 6 -> getByNumero();
+                case 7 -> afficherCompteMax();
+                case 8 -> afficherCompteMin();
                 case 0 -> System.out.println("Retour...");
                 default -> System.out.println("Choix invalide !");
             }
@@ -243,6 +247,39 @@ public class CompteController {
             }
         } catch (SQLException e){
             System.out.println("Erreur : " + e.getMessage());
+        }
+    }
+
+    private void afficherCompteMax(){
+        try {
+            Compte compte = compteService.getByMax();
+            if (compte != null){
+                System.out.println("ID: " + compte.getId() +
+                        ", Numéro: " + compte.getNumero() +
+                        ", Solde: " + compte.getSolde() +
+                        ", Client: " + compte.getIdClient());;
+
+            }else {
+                System.out.println("Aucun comote trouvé ");
+            }
+        }catch (SQLException e){
+            System.out.println("Erreur :" +e.getMessage());
+        }
+    }
+
+    private void afficherCompteMin(){
+        try {
+            Compte compte = compteService.getByMin();
+            if (compte != null){
+                System.out.println("ID: " + compte.getId() +
+                        ", Numéro: " + compte.getNumero() +
+                        ", Solde: " + compte.getSolde() +
+                        ", Client: " + compte.getIdClient());;
+            }else {
+                System.out.println("Aucun compte trouvé !");
+            }
+        }catch (SQLException e){
+            System.out.println("Erreur :" + e.getMessage());
         }
     }
 

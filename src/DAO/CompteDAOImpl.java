@@ -10,7 +10,7 @@ import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 
-public class CompteDAOImpl implements CompteDAO{
+public class CompteDAOImpl implements CompteDAO {
 
     private Connection connection;
 
@@ -22,21 +22,21 @@ public class CompteDAOImpl implements CompteDAO{
     @Override
     public void create(Compte compte) throws SQLException {
         String sql = "INSERT INTO compte(id, numero, solde, idClient, typeCompte, decouvert, tauxInteret) " + "VALUES (?, ?, ?, ?, ?, ?, ?)";
-        try (PreparedStatement stmt = connection.prepareStatement(sql)){
+        try (PreparedStatement stmt = connection.prepareStatement(sql)) {
             stmt.setString(1, compte.getId());
             stmt.setString(2, compte.getNumero());
             stmt.setDouble(3, compte.getSolde());
             stmt.setString(4, compte.getIdClient());
 
-            if (compte instanceof CompteCourant courant){
+            if (compte instanceof CompteCourant courant) {
                 stmt.setString(5, "courant");
                 stmt.setDouble(6, courant.getDecouvert());
                 stmt.setNull(7, Types.DOUBLE);
-        } else if (compte instanceof CompteEpargne epargne) {
-                stmt.setString(5,"epargne");
+            } else if (compte instanceof CompteEpargne epargne) {
+                stmt.setString(5, "epargne");
                 stmt.setNull(6, Types.DOUBLE);
                 stmt.setDouble(7, epargne.getTauxInteret());
-        }
+            }
             stmt.executeUpdate();
         }
     }
@@ -65,12 +65,12 @@ public class CompteDAOImpl implements CompteDAO{
     @Override
     public void delete(String id) throws SQLException {
         String sql = "DELETE FROM compte where id =?";
-        try (PreparedStatement stmt = connection.prepareStatement(sql)){
+        try (PreparedStatement stmt = connection.prepareStatement(sql)) {
             stmt.setString(1, id);
             int rows = stmt.executeUpdate();
-            if(rows >0){
+            if (rows > 0) {
                 System.out.println("Compte supprimé avec succes !");
-            }else {
+            } else {
                 System.out.println("Aucun compte trouvé avec cet ID !");
             }
         } catch (Exception e) {
@@ -78,12 +78,12 @@ public class CompteDAOImpl implements CompteDAO{
         }
     }
 
-    public List<Compte> findAll() throws SQLException{
+    public List<Compte> findAll() throws SQLException {
         String sql = "SELECT * FROM compte";
         List<Compte> comptes = new ArrayList<>();
-        try (Statement stmt = connection.createStatement()){
+        try (Statement stmt = connection.createStatement()) {
             ResultSet resultat = stmt.executeQuery(sql);
-            while (resultat.next()){
+            while (resultat.next()) {
                 comptes.add(mapToCompte(resultat));
             }
         }
@@ -92,28 +92,28 @@ public class CompteDAOImpl implements CompteDAO{
 
     @Override
     public List<Compte> findByClient(String idClient) throws SQLException {
-            String sql = "SELECT * FROM compte where idclient =?";
-            List<Compte> comptes = new ArrayList<>();
+        String sql = "SELECT * FROM compte where idclient =?";
+        List<Compte> comptes = new ArrayList<>();
 
-            try (PreparedStatement stmt = connection.prepareStatement(sql)){
-                stmt.setString(1, idClient);
-                ResultSet resultat = stmt.executeQuery();
+        try (PreparedStatement stmt = connection.prepareStatement(sql)) {
+            stmt.setString(1, idClient);
+            ResultSet resultat = stmt.executeQuery();
 
-                while (resultat.next()) {
-                    comptes.add(mapToCompte(resultat));
-                }
+            while (resultat.next()) {
+                comptes.add(mapToCompte(resultat));
             }
+        }
         return comptes;
     }
 
     @Override
     public Compte findByNumero(String numero) throws SQLException {
         String sql = "SELECT * FROM compte WHERE numero = ?";
-        try (PreparedStatement stmt = connection.prepareStatement(sql)){
+        try (PreparedStatement stmt = connection.prepareStatement(sql)) {
             stmt.setString(1, numero);
             ResultSet resultat = stmt.executeQuery();
 
-            if (resultat.next()){
+            if (resultat.next()) {
                 return mapToCompte(resultat);
             }
         }
@@ -166,4 +166,25 @@ public class CompteDAOImpl implements CompteDAO{
         return null;
     }
 
+    public Compte findByMax() throws SQLException {
+        String sql = "SELECT * FROM compte ORDER BY solde DESC LIMIT 1";
+        try (Statement stmt = connection.createStatement();
+             ResultSet resultat = stmt.executeQuery(sql)) {
+            if (resultat.next()) {
+                return mapToCompte(resultat);
+            }
+        }
+        return null;
+    }
+
+    public Compte findByMin() throws SQLException {
+        String sql = "SELECT * FROM compte ORDER BY solde ASC LIMIT 1";
+        try (Statement stmt = connection.createStatement();
+             ResultSet resultat = stmt.executeQuery(sql)) {
+            if (resultat.next()) {
+                return mapToCompte(resultat);
+            }
+        }
+        return null;
+    }
 }
