@@ -45,15 +45,12 @@ public class MenuUi {
     }
 
     public Integer menuTransactions() {
-        System.out.println("=== Gestion des transactions ===");
-        System.out.println("1. Ajouter une transaction");
-        System.out.println("2. Modifier une transaction");
-        System.out.println("3. Supprimer une transaction");
-        System.out.println("4. Lister transactions par compte");
-        System.out.println("5. Filtrer par montant");
-        System.out.println("6. Filtrer par type");
-        System.out.println("7. Filtrer par date");
-        System.out.println("8. Filtrer par lieu");
+        System.out.println("=== Gestion des Transactions ===");
+        System.out.println("1. Faire un versement");
+        System.out.println("2. Faire un retrait");
+        System.out.println("3. Faire un virement");
+        System.out.println("4. Afficher toutes les transactions");
+        System.out.println("5. Afficher les transactions par compte");
         System.out.println("0. Retour");
         System.out.print("Votre choix : ");
         return scanner.nextInt();

@@ -7,6 +7,7 @@ public class MainController {
     private final MenuUi menu;
     private final ClientController clientController = new ClientController();
     private final CompteController compteController = new CompteController();
+    private final TransactionController transactionController = new TransactionController();
 
 
     public MainController(MenuUi menu) {
@@ -18,9 +19,9 @@ public class MainController {
         do {
             choix = menu.menuPrincipal();
             switch (choix) {
-                case 1 -> clientController.menuClients(); // délégation au ClientController
+                case 1 -> clientController.menuClients();
                 case 2 -> compteController.menuComptes();
-                case 3 -> menuTransactions();
+                case 3 -> transactionController.menuTransactions();
                 case 0 -> System.out.println("Au revoir !");
                 default -> System.out.println("Choix invalide !");
             }
@@ -47,7 +48,7 @@ public class MainController {
             choix = menu.menuTransactions();
             switch (choix) {
                 case 1 -> System.out.println("Ajouter transaction");
-                case 2 -> System.out.println("Afficher transact33333ions d’un compte");
+                case 2 -> System.out.println("Afficher transacions d’un compte");
                 case 3 -> System.out.println("Afficher transactions d’un client");
                 case 0 -> System.out.println("Retour au menu principal...");
                 default -> System.out.println("Choix invalide !");

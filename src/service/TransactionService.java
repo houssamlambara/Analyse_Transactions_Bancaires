@@ -42,4 +42,12 @@ public class TransactionService {
         return transactionDAO.findAll();
     }
 
+    public List<Transaction> findAll() throws SQLException {
+        return transactionDAO.findAll();
+    }
+
+    public List<Transaction> findByCompte(String idCompte) throws SQLException {
+        return transactionDAO.findByCompte(idCompte);
+    }
+
 }
