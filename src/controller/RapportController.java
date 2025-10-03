@@ -5,6 +5,7 @@ import enums.TypeTransaction;
 import model.Client;
 
 import java.sql.SQLException;
+import java.util.InputMismatchException;
 import java.util.Map;
 import java.util.Scanner;
 
@@ -14,8 +15,9 @@ public class RapportController {
     private final Scanner scanner = new Scanner(System.in);
 
     public void menuRapports() {
-        int choix;
+        int choix = 0;
         do {
+            try {
             System.out.println("\n===== MENU RAPPORTS =====");
             System.out.println("1. Top 5 des clients par solde");
             System.out.println("2. Rapport mensuel (transactions par type)");
@@ -30,6 +32,10 @@ public class RapportController {
                 case 0 -> System.out.println("Retour au menu principal...");
                 default -> System.out.println("Choix invalide !");
             }
+        } catch (InputMismatchException e) {
+            System.out.println("Veuillez entrer uniquement des chiffres !");
+            scanner.nextLine();
+        }
         } while (choix != 0);
     }
 
@@ -61,6 +67,9 @@ public class RapportController {
                 System.out.println(entry.getKey() + " -> Nombre : " + entry.getValue().get("nombre")
                         + ", Total : " + entry.getValue().get("total"));
             }
+        } catch (InputMismatchException e) {
+            System.out.println("Veuillez entrer uniquement des chiffres !");
+            scanner.nextLine();
         } catch (SQLException e) {
             System.out.println("Erreur lors de la génération du rapport : " + e.getMessage());
         }

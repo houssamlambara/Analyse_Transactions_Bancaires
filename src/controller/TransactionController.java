@@ -53,28 +53,31 @@ public class TransactionController {
     }
 
     public void versement() {
-        System.out.print("ID Compte : ");
-        String idCompte = scanner.nextLine();
-
-        System.out.print("Montant du versement : ");
-        double montant = scanner.nextDouble();
-        scanner.nextLine();
-
-        System.out.print("Lieu : ");
-        String lieu = scanner.nextLine();
-
         try {
+            System.out.print("ID Compte : ");
+            String idCompte = scanner.nextLine();
+
+            System.out.print("Montant du versement : ");
+            double montant = scanner.nextDouble();
+            scanner.nextLine();
+
+            System.out.print("Lieu : ");
+            String lieu = scanner.nextLine();
+
+            if (montant <= 0) {
+                System.out.println("Le montant doit être positif !");
+                return;
+            }
+
             Compte compte = compteService.getById(idCompte);
             if (compte == null) {
                 System.out.println("Compte non trouvé !");
                 return;
             }
 
-            // Mise à jour du solde
             compte.setSolde(compte.getSolde() + montant);
             compteService.modifierCompte(compte);
 
-            // Enregistrement de la transaction
             Transaction transaction = new Transaction(
                     UUID.randomUUID().toString(),
                     LocalDate.now(),
@@ -86,23 +89,37 @@ public class TransactionController {
             transactionService.ajouterTransaction(transaction);
 
             System.out.println("Versement effectué avec succès !");
-        } catch (SQLException e) {
-            System.out.println("Erreur lors du versement : " + e.getMessage());
+        }
+        catch (java.util.InputMismatchException e) {
+            System.out.println("Veuillez entrer uniquement un nombre valide !");
+            scanner.nextLine();
+        }
+        catch (SQLException e) {
+            System.out.println("Erreur base de données : " + e.getMessage());
+        }
+        catch (Exception e) {
+            System.out.println("Erreur inattendue : " + e.getMessage());
         }
     }
 
+
     public void retrait() {
-        System.out.print("ID Compte : ");
-        String idCompte = scanner.nextLine();
-
-        System.out.print("Montant du retrait : ");
-        double montant = scanner.nextDouble();
-        scanner.nextLine();
-
-        System.out.print("Lieu : ");
-        String lieu = scanner.nextLine();
-
         try {
+            System.out.print("ID Compte : ");
+            String idCompte = scanner.nextLine();
+
+            System.out.print("Montant du retrait : ");
+            double montant = scanner.nextDouble();
+            scanner.nextLine();
+
+            System.out.print("Lieu : ");
+            String lieu = scanner.nextLine();
+
+            if (montant <= 0) {
+                System.out.println("Le montant doit être positif !");
+                return;
+            }
+
             Compte compte = compteService.getById(idCompte);
             if (compte == null) {
                 System.out.println("Compte non trouvé !");
@@ -114,11 +131,9 @@ public class TransactionController {
                 return;
             }
 
-            // Mise à jour du solde
             compte.setSolde(compte.getSolde() - montant);
             compteService.modifierCompte(compte);
 
-            // Enregistrement de la transaction
             Transaction transaction = new Transaction(
                     UUID.randomUUID().toString(),
                     LocalDate.now(),
@@ -130,26 +145,37 @@ public class TransactionController {
             transactionService.ajouterTransaction(transaction);
 
             System.out.println("Retrait effectué avec succès !");
+
+        } catch (java.util.InputMismatchException e) {
+            System.out.println("Veuillez entrer uniquement un nombre valide !");
+            scanner.nextLine();
         } catch (SQLException e) {
-            System.out.println("Erreur lors du retrait : " + e.getMessage());
+            System.out.println("Erreur base de données : " + e.getMessage());
+        } catch (Exception e) {
+            System.out.println("Erreur inattendue : " + e.getMessage());
         }
     }
 
     public void virement() {
-        System.out.print("ID Compte source : ");
-        String idCompteSource = scanner.nextLine();
-
-        System.out.print("ID Compte destinataire : ");
-        String idCompteDest = scanner.nextLine();
-
-        System.out.print("Montant du virement : ");
-        double montant = scanner.nextDouble();
-        scanner.nextLine();
-
-        System.out.print("Lieu : ");
-        String lieu = scanner.nextLine();
-
         try {
+            System.out.print("ID Compte source : ");
+            String idCompteSource = scanner.nextLine();
+
+            System.out.print("ID Compte destinataire : ");
+            String idCompteDest = scanner.nextLine();
+
+            System.out.print("Montant du virement : ");
+            double montant = scanner.nextDouble();
+            scanner.nextLine();
+
+            System.out.print("Lieu : ");
+            String lieu = scanner.nextLine();
+
+            if (montant <= 0) {
+                System.out.println("Le montant doit être positif !");
+                return;
+            }
+
             Compte compteSource = compteService.getById(idCompteSource);
             Compte compteDest = compteService.getById(idCompteDest);
 
@@ -169,7 +195,7 @@ public class TransactionController {
             compteService.modifierCompte(compteSource);
             compteService.modifierCompte(compteDest);
 
-            // Enregistrement des transactions (débit et crédit)
+            // Enregistrement des transactions
             Transaction debit = new Transaction(
                     UUID.randomUUID().toString() + "-Debit",
                     LocalDate.now(),
@@ -191,8 +217,13 @@ public class TransactionController {
             transactionService.ajouterTransaction(credit);
 
             System.out.println("Virement effectué avec succès !");
+        } catch (java.util.InputMismatchException e) {
+            System.out.println("Veuillez entrer uniquement un nombre valide !");
+            scanner.nextLine();
         } catch (SQLException e) {
-            System.out.println("Erreur lors du virement : " + e.getMessage());
+            System.out.println("Erreur base de données : " + e.getMessage());
+        } catch (Exception e) {
+            System.out.println("Erreur inattendue : " + e.getMessage());
         }
     }
 
@@ -243,17 +274,18 @@ public class TransactionController {
     }
 
     private void filterTransactions() {
-        System.out.println("=== Filtrer les Transactions ===");
-        System.out.println("1. Par montant");
-        System.out.println("2. Par type");
-        System.out.println("3. Par date");
-        System.out.println("4. Par lieu");
-        System.out.print("Votre choix : ");
-        int choix = scanner.nextInt();
-        scanner.nextLine();
-
         try {
+            System.out.println("=== Filtrer les Transactions ===");
+            System.out.println("1. Par montant");
+            System.out.println("2. Par type");
+            System.out.println("3. Par date");
+            System.out.println("4. Par lieu");
+            System.out.print("Votre choix : ");
+            int choix = scanner.nextInt();
+            scanner.nextLine();
+
             List<Transaction> result = null;
+
             switch (choix) {
                 case 1 -> {
                     System.out.print("Montant minimum : ");
@@ -285,10 +317,19 @@ public class TransactionController {
             } else {
                 System.out.println("Aucune transaction trouvée !");
             }
+
+        } catch (java.util.InputMismatchException e) {
+            System.out.println("Veuillez entrer un nombre valide !");
+            scanner.nextLine();
+        } catch (java.time.format.DateTimeParseException e) {
+            System.out.println("Format de date invalide !");
+        } catch (SQLException e) {
+            System.out.println("Erreur base de données : " + e.getMessage());
         } catch (Exception e) {
-            System.out.println("Erreur lors du filtrage : " + e.getMessage());
+            System.out.println("Erreur inattendue : " + e.getMessage());
         }
     }
+
 
     private void groupTransactionsByType() {
         try {
