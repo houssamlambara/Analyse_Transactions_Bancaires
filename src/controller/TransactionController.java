@@ -9,6 +9,7 @@ import service.TransactionService;
 import java.sql.SQLException;
 import java.time.LocalDate;
 import java.util.List;
+import java.util.Map;
 import java.util.Scanner;
 import java.util.UUID;
 
@@ -28,6 +29,9 @@ public class TransactionController {
             System.out.println("3. Faire un virement");
             System.out.println("4. Afficher toutes les transactions");
             System.out.println("5. Afficher les transactions par compte");
+            System.out.println("6. Filtrer les transactions");
+            System.out.println("7. Regrouper les transactions par type");
+            System.out.println("8. Total/Moyenne des transactions par compte ou client");
             System.out.println("0. Retour");
             System.out.print("Votre choix : ");
             choix = scanner.nextInt();
@@ -39,6 +43,9 @@ public class TransactionController {
                 case 3 -> virement();
                 case 4 -> afficherToutesTransactions();
                 case 5 -> afficherTransactionsParCompte();
+                case 6 -> filterTransactions();
+                case 7 -> groupTransactionsByType();
+                case 8 -> calculerTotalMoyenne();
                 case 0 -> System.out.println("Retour au menu principal...");
                 default -> System.out.println("Choix invalide !");
             }
@@ -235,11 +242,136 @@ public class TransactionController {
         }
     }
 
-    public void ajouterTransaction() { }
-    public void modifierTransaction() { }
-    public void supprimerTransaction() { }
-    public void filterByMontant() { }
-    public void filterByType() { }
-    public void filterByDate() { }
-    public void filterByLieu() { }
+    private void filterTransactions() {
+        System.out.println("=== Filtrer les Transactions ===");
+        System.out.println("1. Par montant");
+        System.out.println("2. Par type");
+        System.out.println("3. Par date");
+        System.out.println("4. Par lieu");
+        System.out.print("Votre choix : ");
+        int choix = scanner.nextInt();
+        scanner.nextLine();
+
+        try {
+            List<Transaction> result = null;
+            switch (choix) {
+                case 1 -> {
+                    System.out.print("Montant minimum : ");
+                    double montant = scanner.nextDouble();
+                    scanner.nextLine();
+                    result = transactionService.filterByMontant(montant);
+                }
+                case 2 -> {
+                    System.out.print("Type (VERSEMENT/RETRAIT/VIREMENT) : ");
+                    String type = scanner.nextLine().toUpperCase();
+                    result = transactionService.filterByType(TypeTransaction.valueOf(type));
+                }
+                case 3 -> {
+                    System.out.print("Date (YYYY-MM-DD) : ");
+                    String dateStr = scanner.nextLine();
+                    LocalDate date = LocalDate.parse(dateStr);
+                    result = transactionService.filterByDate(date);
+                }
+                case 4 -> {
+                    System.out.print("Lieu : ");
+                    String lieu = scanner.nextLine();
+                    result = transactionService.filterByLieu(lieu);
+                }
+                default -> System.out.println("Choix invalide !");
+            }
+
+            if (result != null && !result.isEmpty()) {
+                result.forEach(System.out::println);
+            } else {
+                System.out.println("Aucune transaction trouvée !");
+            }
+        } catch (Exception e) {
+            System.out.println("Erreur lors du filtrage : " + e.getMessage());
+        }
+    }
+
+    private void groupTransactionsByType() {
+        try {
+            Map<TypeTransaction, List<Transaction>> grouped = transactionService.groupByType();
+
+            if (grouped.isEmpty()) {
+                System.out.println("Aucune transaction trouvée !");
+                return;
+            }
+
+            // Parcours de chaque type
+            for (TypeTransaction type : grouped.keySet()) {
+                System.out.println("\n=== " + type + " ===");
+                List<Transaction> list = grouped.get(type);
+                for (Transaction t : list) {
+                    System.out.println("ID : " + t.id() +
+                            " | Date : " + t.date() +
+                            " | Montant : " + t.montant() +
+                            " | Lieu : " + t.lieu() +
+                            " | Compte : " + t.idCompte());
+                }
+            }
+        } catch (SQLException e) {
+            System.out.println("Erreur lors du regroupement : " + e.getMessage());
+        }
+    }
+
+    private void calculerTotalMoyenne() {
+        System.out.println("1. Par compte");
+        System.out.println("2. Par client");
+        System.out.print("Votre choix : ");
+        int choix = scanner.nextInt();
+        scanner.nextLine();
+
+        try {
+            switch (choix) {
+                case 1 -> { // Par compte
+                    System.out.print("ID du compte : ");
+                    String idCompte = scanner.nextLine();
+
+                    System.out.println("1. Total");
+                    System.out.println("2. Moyenne");
+                    System.out.print("Votre choix : ");
+                    int type = scanner.nextInt();
+                    scanner.nextLine();
+
+                    if (type == 1) {
+                        double total = transactionService.totalTransactionsByCompte(idCompte);
+                        System.out.println("Total des transactions pour le compte " + idCompte + " : " + total);
+                    } else if (type == 2) {
+                        double moyenne = transactionService.moyenneTransactionsByCompte(idCompte);
+                        System.out.println("Moyenne des transactions pour le compte " + idCompte + " : " + moyenne);
+                    } else {
+                        System.out.println("Choix invalide !");
+                    }
+                }
+
+                case 2 -> { // Par client
+                    System.out.print("ID du client : ");
+                    String idClient = scanner.nextLine();
+
+                    System.out.println("1. Total");
+                    System.out.println("2. Moyenne");
+                    System.out.print("Votre choix : ");
+                    int type = scanner.nextInt();
+                    scanner.nextLine();
+
+                    if (type == 1) {
+                        double total = transactionService.totalTransactionsByClient(idClient);
+                        System.out.println("Total des transactions pour le client " + idClient + " : " + total);
+                    } else if (type == 2) {
+                        double moyenne = transactionService.moyenneTransactionsByClient(idClient);
+                        System.out.println("Moyenne des transactions pour le client " + idClient + " : " + moyenne);
+                    } else {
+                        System.out.println("Choix invalide !");
+                    }
+                }
+
+                default -> System.out.println("Choix invalide !");
+            }
+        } catch (SQLException e) {
+            System.out.println("Erreur lors du calcul : " + e.getMessage());
+        }
+    }
+
 }
