@@ -51,7 +51,7 @@ public class RapportController {
         try {
             System.out.print("Entrez le mois (1-12) : ");
             int mois = scanner.nextInt();
-            System.out.print("Entrez l'année : ");t
+            System.out.print("Entrez l'année : ");
             int annee = scanner.nextInt();
 
             var rapport = rapportService.rapportMensuel(mois, annee);
