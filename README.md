@@ -81,3 +81,13 @@
 4. Analyse financière : total/moyenne par client ou compte
 5. Détection d'anomalies : transactions suspectes, comptes inactifs
 6. Rapports : top clients, statistiques mensuelles des transactions
+
+## APPLICATION
+![img_1.png](img_1.png)
+![img_4.png](img_4.png)
+![img_3.png](img_3.png)
+![img_2.png](img_2.png)
+
+## UML 
+
+![img.png](img.png)
