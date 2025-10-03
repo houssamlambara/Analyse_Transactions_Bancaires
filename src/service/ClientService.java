@@ -37,4 +37,8 @@ public class ClientService {
     public List<Client> findAll() throws SQLException {
         return clientDAO.findAll();
     }
+
+    public Client findById(String id) throws SQLException {
+        return clientDAO.findById(id);
+    }
 }

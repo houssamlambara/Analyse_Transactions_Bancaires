@@ -58,8 +58,8 @@ public class TransactionService {
 
     public List<Transaction> filterByLieu(String lieu) throws SQLException{
         return findAll().stream()
-                .filter(transaction -> transaction.lieu() != null == transaction.lieu().equalsIgnoreCase(lieu))
-                        .toList();
+                .filter(transaction -> transaction.lieu() != null && transaction.lieu().equalsIgnoreCase(lieu))
+                .toList();
     }
 
     public Map<TypeTransaction, List<Transaction>> groupByType() throws SQLException {
