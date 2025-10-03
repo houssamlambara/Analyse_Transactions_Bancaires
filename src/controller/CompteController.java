@@ -53,20 +53,26 @@ public class CompteController {
     }
 
     private void ajouterCompteCourant() {
-        String id = UUID.randomUUID().toString();
-        String numero = "CPT-" + (int)(Math.random() * 10000);
-        System.out.print("Solde : ");
-        double solde = scanner.nextDouble();
-        System.out.print("Découvert : ");
-        double decouvert = scanner.nextDouble();
-        scanner.nextLine();
-
         try {
+            String id = UUID.randomUUID().toString();
+            String numero = "CPT-" + (int)(Math.random() * 10000);
+            System.out.print("Solde : ");
+            double solde = scanner.nextDouble();
+            System.out.print("Découvert : ");
+            double decouvert = scanner.nextDouble();
+            scanner.nextLine();
+
+            if (solde < 0 || decouvert < 0) {
+                System.out.println("Le solde et le découvert doivent être positifs !");
+                return;
+            }
+
             List<Client> clients = new ClientService().findAll();
             if (clients.isEmpty()) {
                 System.out.println("Aucun client disponible !");
                 return;
             }
+
             System.out.println("=== Liste des clients ===");
             for (Client client : clients) {
                 System.out.println("ID : " + client.id() + " | Nom : " + client.nom());
@@ -86,13 +92,19 @@ public class CompteController {
 
             compteService.ajouterCompte(compte);
             System.out.println("Compte courant ajouté !");
+
+        } catch (java.util.InputMismatchException e) {
+            System.out.println("Veuillez entrer un nombre valide !");
+            scanner.nextLine();
         } catch (SQLException e) {
-            System.out.println("Erreur : " + e.getMessage());
+            System.out.println("Erreur base de données : " + e.getMessage());
+        } catch (Exception e) {
+            System.out.println("Erreur inattendue : " + e.getMessage());
         }
     }
 
-
     private void ajouterCompteEpargne(){
+        try {
         String id = UUID.randomUUID().toString();
         String numero = "CPT-" + (int)(Math.random() * 10000);
         System.out.println("Solde :");
@@ -101,7 +113,6 @@ public class CompteController {
         double taux = scanner.nextDouble();
         scanner.nextLine();
 
-        try {
             List<Client> clients = new ClientService().findAll();
             if (clients.isEmpty()) {
                 System.out.println("Aucun client disponible !");
@@ -125,8 +136,13 @@ public class CompteController {
             compteService.ajouterCompte(compte);
 
             System.out.println("Compte epargne ajouter !");
-        }catch (SQLException e){
-            System.out.println("Erreur :" + e.getMessage());
+        } catch (java.util.InputMismatchException e) {
+            System.out.println("Veuillez entrer un nombre valide !");
+            scanner.nextLine();
+        } catch (SQLException e) {
+            System.out.println("Erreur base de données : " + e.getMessage());
+        } catch (Exception e) {
+            System.out.println("Erreur inattendue : " + e.getMessage());
         }
     }
 
@@ -167,11 +183,11 @@ public class CompteController {
 //    }
 
     public void modifierCompte() {
+       try {
         System.out.println("Entrez l'ID du compte à modifier :");
         String id = scanner.nextLine();
 
-        try {
-            Compte compte = compteService.getById(id); // récupère le compte par ID
+            Compte compte = compteService.getById(id);
             if (compte == null) {
                 System.out.println("Compte introuvable !");
                 return;
@@ -196,9 +212,14 @@ public class CompteController {
 
             compteService.modifierCompte(compte);
             System.out.println("Compte modifié avec succès !");
-        } catch (Exception e) {
-            System.out.println("Erreur : " + e.getMessage());
-        }
+       } catch (java.util.InputMismatchException e) {
+           System.out.println("Veuillez entrer un nombre valide !");
+           scanner.nextLine();
+       } catch (SQLException e) {
+           System.out.println("Erreur base de données : " + e.getMessage());
+       } catch (Exception e) {
+           System.out.println("Erreur inattendue : " + e.getMessage());
+       }
     }
 
     public void supprimerCompte() {
@@ -278,8 +299,13 @@ public class CompteController {
             }else {
                 System.out.println("Aucun compte trouvé !");
             }
-        }catch (SQLException e){
-            System.out.println("Erreur :" + e.getMessage());
+        } catch (java.util.InputMismatchException e) {
+            System.out.println("Veuillez entrer un nombre valide !");
+            scanner.nextLine();
+        } catch (SQLException e) {
+            System.out.println("Erreur base de données : " + e.getMessage());
+        } catch (Exception e) {
+            System.out.println("Erreur inattendue : " + e.getMessage());
         }
     }
 

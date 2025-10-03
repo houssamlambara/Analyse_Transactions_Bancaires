@@ -42,6 +42,8 @@ public class ClientController {
     }
 
     public void ajouterClient() {
+        try {
+
         System.out.print("Nom : ");
         String nom = scanner.nextLine();
         System.out.print("Email : ");
@@ -51,11 +53,15 @@ public class ClientController {
 
         Client client = new Client(id, nom, email);
 
-        try {
             clientService.ajouterClient(client);
             System.out.println("Client ajouté avec succès !");
+        } catch (java.util.InputMismatchException e) {
+            System.out.println("Veuillez entrer un nombre valide !");
+            scanner.nextLine();
         } catch (SQLException e) {
-            System.out.println("Erreur lors de l’ajout : " + e.getMessage());
+            System.out.println("Erreur base de données : " + e.getMessage());
+        } catch (Exception e) {
+            System.out.println("Erreur inattendue : " + e.getMessage());
         }
     }
 
@@ -76,8 +82,13 @@ public class ClientController {
             clientService.modifierClient(client);
 
             System.out.println("Client mis à jour avec succès !");
+        } catch (java.util.InputMismatchException e) {
+            System.out.println("Veuillez entrer un nombre valide !");
+            scanner.nextLine();
+        } catch (SQLException e) {
+            System.out.println("Erreur base de données : " + e.getMessage());
         } catch (Exception e) {
-            System.out.println("Erreur lors de la mise à jour : " + e.getMessage());
+            System.out.println("Erreur inattendue : " + e.getMessage());
         }
     }
 
